@@ -31,6 +31,8 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/discv5"
 	"github.com/ethereum/go-ethereum/p2p/nat"
 	"github.com/ethereum/go-ethereum/p2p/netutil"
+
+	"github.com/nictuku/dht"
 )
 
 func main() {
@@ -45,6 +47,7 @@ func main() {
 		runv5       = flag.Bool("v5", false, "run a v5 topic discovery bootnode")
 		verbosity   = flag.Int("verbosity", int(log.LvlInfo), "log verbosity (0-9)")
 		vmodule     = flag.String("vmodule", "", "log verbosity pattern")
+		kademlia    = flag.Bool("kademlia", false, "run a Kademlia discovery bootnode")
 
 		nodeKey *ecdsa.PrivateKey
 		err     error
@@ -117,7 +120,20 @@ func main() {
 		}
 	}
 
-	if *runv5 {
+	if *kademlia {
+		//fmt.Println("Kademlia")
+		if _, err := dht.New(nil); err != nil {
+			utils.Fatalf("%v", err)
+		}
+		//d.Start()
+		/*
+			if err = d.Start(); err != nil {
+				fmt.Fprintf(os.Stderr, "DHT start error: %v", err)
+				os.Exit(1)
+			}
+
+		*/
+	} else if *runv5 {
 		if _, err := discv5.ListenUDP(nodeKey, conn, realaddr, "", restrictList); err != nil {
 			utils.Fatalf("%v", err)
 		}
