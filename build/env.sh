@@ -22,6 +22,8 @@ fi
 GOPATH="$workspace"
 export GOPATH
 
+go get github.com/nictuku/dht
+
 # Run the command inside the workspace.
 cd "$ethdir/go-ethereum"
 PWD="$ethdir/go-ethereum"
